@@ -1,4 +1,13 @@
 package com.nicolas.hotelreservation.dto.response;
 
-public record RoomResponseDTO() {
-}
+import com.nicolas.hotelreservation.enums.RoomType;
+
+import java.math.BigDecimal;
+
+public record RoomResponseDTO(
+        Long id,
+        Integer roomNumber,
+        RoomType roomType,
+        BigDecimal pricePerNight,
+        Integer maxGuests
+) {}
