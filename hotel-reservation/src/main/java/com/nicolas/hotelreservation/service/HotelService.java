@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 public class HotelService {
     private final IHotelRepository hotelRepository;
 
-    public void createHotel(HotelRequestDTO hotelDTO) throws BadRequestException {
+    public void createHotel(HotelRequestDTO hotelDTO) {
         HotelEntity hotel = hotelRepository.findByName(hotelDTO.name()).orElse(null);
 
         if(hotel != null){
@@ -46,13 +46,13 @@ public class HotelService {
                                         .toList();
     }
 
-    public HotelResponseDTO getHotelById(Long id) throws NotFoundException{
+    public HotelResponseDTO getHotelById(Long id) {
         HotelEntity hotel = hotelRepository.findById(id).orElseThrow(() -> new NotFoundException("Hotel não encontrado"));
 
         return new HotelResponseDTO(hotel.getId(), hotel.getName(), hotel.getDescription(), hotel.getCity(), hotel.getAddress());
     }
 
-    public HotelResponseDTO updateHotelById(Long id, HotelRequestDTO hotelRequestDTO) throws NotFoundException {
+    public HotelResponseDTO updateHotelById(Long id, HotelRequestDTO hotelRequestDTO) {
         HotelEntity hotel = hotelRepository.findById(id).orElseThrow(() -> new NotFoundException("Hotel não encontrado"));
 
         hotel.setName(hotelRequestDTO.name());
@@ -71,7 +71,7 @@ public class HotelService {
         );
     }
 
-    public void deleteHotel(Long id) throws NotFoundException{
+    public void deleteHotel(Long id) {
         HotelEntity hotel = hotelRepository.findById(id).orElseThrow(() -> new NotFoundException("Hotel não encontrado"));
 
         hotelRepository.delete(hotel);
