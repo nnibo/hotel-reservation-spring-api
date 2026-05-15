@@ -32,4 +32,5 @@ public class GlobalExcepitonHandler {
 
         return ResponseEntity.badRequest().body(error);
     }
+
 }
