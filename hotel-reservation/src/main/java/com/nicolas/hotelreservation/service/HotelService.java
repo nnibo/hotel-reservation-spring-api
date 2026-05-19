@@ -5,17 +5,18 @@ import com.nicolas.hotelreservation.dto.response.HotelResponseDTO;
 import com.nicolas.hotelreservation.entity.HotelEntity;
 import com.nicolas.hotelreservation.exception.BadRequestException;
 import com.nicolas.hotelreservation.exception.NotFoundException;
+import com.nicolas.hotelreservation.mapper.HotelMapper;
 import com.nicolas.hotelreservation.repository.IHotelRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class HotelService {
     private final IHotelRepository hotelRepository;
+    private final HotelMapper hotelMapper;
 
     public void createHotel(HotelRequestDTO hotelDTO) {
         HotelEntity hotel = hotelRepository.findByName(hotelDTO.name()).orElse(null);
@@ -24,51 +25,31 @@ public class HotelService {
             throw new BadRequestException("Hotel já cadastrado no sistema");
         }
 
-        hotelRepository.save(HotelEntity.builder()
-                .name(hotelDTO.name())
-                .description(hotelDTO.description())
-                .city(hotelDTO.city())
-                .address(hotelDTO.address())
-                .build()
-        );
+        HotelEntity newHotel = hotelMapper.dtoToEntity(hotelDTO);
+        hotelRepository.save(newHotel);
     }
 
     public List<HotelResponseDTO> getAllHotels() {
         List<HotelEntity> hotels = hotelRepository.findAll();
 
-        return hotels.stream().map(
-                hotel -> new HotelResponseDTO(
-                                                hotel.getId(),
-                                                hotel.getName(),
-                                                hotel.getDescription(),
-                                                hotel.getCity(),
-                                                hotel.getAddress()))
-                                        .toList();
+        return hotels.stream()
+                .map(hotelMapper::entityToDto)
+                .toList();
     }
 
     public HotelResponseDTO getHotelById(Long id) {
         HotelEntity hotel = hotelRepository.findById(id).orElseThrow(() -> new NotFoundException("Hotel não encontrado"));
 
-        return new HotelResponseDTO(hotel.getId(), hotel.getName(), hotel.getDescription(), hotel.getCity(), hotel.getAddress());
+        return hotelMapper.entityToDto(hotel);
     }
 
     public HotelResponseDTO updateHotelById(Long id, HotelRequestDTO hotelRequestDTO) {
         HotelEntity hotel = hotelRepository.findById(id).orElseThrow(() -> new NotFoundException("Hotel não encontrado"));
 
-        hotel.setName(hotelRequestDTO.name());
-        hotel.setDescription(hotelRequestDTO.description());
-        hotel.setCity(hotelRequestDTO.city());
-        hotel.setAddress(hotelRequestDTO.address());
-
+        hotelMapper.updateEntityFromDTO(hotelRequestDTO, hotel);
         HotelEntity updatedHotel = hotelRepository.save(hotel);
 
-        return new HotelResponseDTO(
-                updatedHotel.getId(),
-                updatedHotel.getName(),
-                updatedHotel.getDescription(),
-                updatedHotel.getCity(),
-                updatedHotel.getAddress()
-        );
+        return hotelMapper.entityToDto(updatedHotel);
     }
 
     public void deleteHotel(Long id) {
