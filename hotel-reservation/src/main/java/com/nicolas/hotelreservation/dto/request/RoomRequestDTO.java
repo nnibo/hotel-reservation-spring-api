@@ -1,16 +1,14 @@
 package com.nicolas.hotelreservation.dto.request;
 
 import com.nicolas.hotelreservation.enums.RoomType;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 
 import java.math.BigDecimal;
 
 public record RoomRequestDTO(
-        @NotNull(message = "O número do quarto é obrigatório.")
-        @Size(min = 1, max = 4, message = "O numero precisa ser entre 1 e 9999")
+        @NotNull(message = "O número do quarto é obrigatório")
+        @Min(value = 1, message = "O número do quarto deve ser no mínimo 1")
+        @Max(value = 9999, message = "O número do quarto deve ser no máximo 9999")
         Integer roomNumber,
 
         @NotNull(message = "O tipo do quarto é obrigatório.")
