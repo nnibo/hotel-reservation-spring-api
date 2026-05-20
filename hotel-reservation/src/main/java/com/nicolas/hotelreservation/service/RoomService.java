@@ -23,7 +23,7 @@ public class RoomService {
     public void createRoom(Long hotelId, RoomRequestDTO roomRequestDTO) {
         HotelEntity hotel = hotelRepository.findById(hotelId).orElseThrow(() -> new NotFoundException("Hotel não encontrado para vinculação"));
 
-        RoomEntity newRoom = roomMapper.dtoToEntity(roomRequestDTO);
+        RoomEntity newRoom = roomMapper.dtoToEntity(roomRequestDTO, hotel);
         roomRepository.save(newRoom);
     }
 

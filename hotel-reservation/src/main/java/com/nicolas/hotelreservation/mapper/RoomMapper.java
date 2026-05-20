@@ -2,6 +2,7 @@ package com.nicolas.hotelreservation.mapper;
 
 import com.nicolas.hotelreservation.dto.request.RoomRequestDTO;
 import com.nicolas.hotelreservation.dto.response.RoomResponseDTO;
+import com.nicolas.hotelreservation.entity.HotelEntity;
 import com.nicolas.hotelreservation.entity.RoomEntity;
 import org.springframework.stereotype.Component;
 
@@ -18,12 +19,13 @@ public class RoomMapper {
         );
     }
 
-    public RoomEntity dtoToEntity(RoomRequestDTO roomRequestDTO) {
+    public RoomEntity dtoToEntity(RoomRequestDTO roomRequestDTO, HotelEntity hotelEntity) {
         return RoomEntity.builder()
                 .roomNumber(roomRequestDTO.roomNumber())
                 .roomType(roomRequestDTO.roomType())
                 .pricePerNight(roomRequestDTO.pricePerNight())
                 .maxGuests(roomRequestDTO.maxGuests())
+                .hotel(hotelEntity)
                 .build();
     }
 
