@@ -27,10 +27,10 @@ public class HotelMapper {
                 .build();
     }
 
-    public void updateEntityFromDTO(HotelRequestDTO dto, HotelEntity entity) {
-        entity.setName(dto.name());
-        entity.setDescription(dto.description());
-        entity.setCity(dto.city());
-        entity.setAddress(dto.address());
+    public void updateEntityFromDTO(HotelRequestDTO hotelRequestDTO, HotelEntity hotelEntity) {
+        hotelEntity.setName(hotelRequestDTO.name());
+        hotelEntity.setDescription(hotelRequestDTO.description());
+        hotelEntity.setCity(hotelRequestDTO.city());
+        hotelEntity.setAddress(hotelRequestDTO.address());
     }
 }
