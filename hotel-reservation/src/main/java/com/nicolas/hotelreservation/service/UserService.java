@@ -18,17 +18,6 @@ public class UserService {
     private final IUserRepository userRepository;
     private final UserMapper userMapper;
 
-    public void createUser(UserRequestDTO userRequestDTO) {
-        UserEntity user = userRepository.findByEmail(userRequestDTO.email()).orElse(null);
-
-        if(user != null) {
-            throw new BadRequestException("Usuario já cadastrado no sistema");
-        }
-
-        UserEntity newUser = userMapper.dtoToEntity(userRequestDTO);
-        userRepository.save(newUser);
-    }
-
     public List<UserResponseDTO> getAllUsers(){
         return userRepository.findAll().stream().map(userMapper::entityToDTO).toList();
     }

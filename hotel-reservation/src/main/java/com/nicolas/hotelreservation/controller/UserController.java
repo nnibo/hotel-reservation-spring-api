@@ -28,12 +28,6 @@ public class UserController {
         return userService.getAllUsers();
     }
 
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public void createUser(@RequestBody @Valid UserRequestDTO userRequestDTO) {
-        userService.createUser(userRequestDTO);
-    }
-
     @PutMapping("/{userId}")
     @ResponseStatus(HttpStatus.OK)
     public UserResponseDTO updateUserById(@PathVariable Long userId, @RequestBody @Valid UserRequestDTO userRequestDTO) {
