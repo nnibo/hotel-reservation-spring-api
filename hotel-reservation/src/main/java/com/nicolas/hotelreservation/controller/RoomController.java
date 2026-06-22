@@ -22,10 +22,10 @@ public class RoomController {
         return roomService.getAllRoomByHotelId(hotelId);
     }
 
-    @GetMapping("/hotels/{hotelId}/rooms/{roomId}")
+    @GetMapping("/rooms/{roomId}")
     @ResponseStatus(HttpStatus.OK)
-    public RoomResponseDTO getRoomById(@PathVariable Long hotelId, @PathVariable Long roomId) {
-        return roomService.getRoomById(hotelId, roomId);
+    public RoomResponseDTO getRoomById(@PathVariable Long roomId) {
+        return roomService.getRoomById(roomId);
     }
 
     @PostMapping("/hotels/{hotelId}/rooms")
