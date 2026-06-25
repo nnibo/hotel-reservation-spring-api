@@ -6,6 +6,7 @@ import com.nicolas.hotelreservation.service.RoomService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,18 +29,21 @@ public class RoomController {
         return roomService.getRoomById(roomId);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/hotels/{hotelId}/rooms")
     @ResponseStatus(HttpStatus.CREATED)
     public void createRoom(@PathVariable Long hotelId, @RequestBody @Valid RoomRequestDTO roomRequestDTO) {
         roomService.createRoom(hotelId, roomRequestDTO);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("/rooms/{roomId}")
     @ResponseStatus(HttpStatus.OK)
     public RoomResponseDTO updateRoom(@PathVariable Long roomId, @RequestBody @Valid RoomRequestDTO roomRequestDTO) {
         return roomService.updateRoom(roomId, roomRequestDTO);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("/rooms/{roomId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteRoom(@PathVariable Long roomId){
