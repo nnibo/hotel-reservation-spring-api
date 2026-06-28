@@ -3,6 +3,7 @@ package com.nicolas.hotelreservation.service;
 import com.nicolas.hotelreservation.dto.request.UserRequestDTO;
 import com.nicolas.hotelreservation.dto.response.UserResponseDTO;
 import com.nicolas.hotelreservation.entity.UserEntity;
+import com.nicolas.hotelreservation.enums.UserRole;
 import com.nicolas.hotelreservation.exception.BadRequestException;
 import com.nicolas.hotelreservation.exception.NotFoundException;
 import com.nicolas.hotelreservation.mapper.UserMapper;
@@ -18,8 +19,18 @@ public class UserService {
     private final IUserRepository userRepository;
     private final UserMapper userMapper;
 
-    public List<UserResponseDTO> getAllUsers(){
-        return userRepository.findAll().stream().map(userMapper::entityToDTO).toList();
+    public List<UserResponseDTO> getAllUsers(UserRole role) {
+        List<UserEntity> users;
+
+        if (role != null) {
+            users = userRepository.findByRole(role);
+        } else {
+            users = userRepository.findAll();
+        }
+
+        return users.stream()
+                .map(userMapper::entityToDTO)
+                .toList();
     }
 
     public UserResponseDTO getUserById(Long id) {
@@ -33,15 +44,15 @@ public class UserService {
         UserEntity user = userRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Usuário não encontrado."));
 
-        userRepository.findByEmail(userDTO.email()).ifPresent(existingUser -> {
-            if (!existingUser.getId().equals(id)) {
+        if (!user.getEmail().equals(userDTO.email())) {
+            if (userRepository.existsByEmail(userDTO.email())) {
                 throw new BadRequestException("Este e-mail já está sendo usado por outro usuário.");
             }
-        });
+        }
 
         userMapper.updateEntityFromDTO(user, userDTO);
-
         UserEntity updatedUser = userRepository.save(user);
+
         return userMapper.entityToDTO(updatedUser);
     }
 
@@ -50,5 +61,16 @@ public class UserService {
             throw new NotFoundException("Usuário não encontrado.");
         }
         userRepository.deleteById(id);
+    }
+
+    public void promoteUserToAdmin(Long userId) {
+        UserEntity user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("Usuário não encontrado"));
+
+        if(user.getRole() == UserRole.ROLE_ADMIN) {
+            throw new BadRequestException("Esse usuário já é um Admin");
+        }
+
+        user.setRole(UserRole.ROLE_ADMIN);
+        userRepository.save(user);
     }
 }
