@@ -29,21 +29,21 @@ public class RoomController {
         return roomService.getRoomById(roomId);
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/hotels/{hotelId}/rooms")
     @ResponseStatus(HttpStatus.CREATED)
     public void createRoom(@PathVariable Long hotelId, @RequestBody @Valid RoomRequestDTO roomRequestDTO) {
         roomService.createRoom(hotelId, roomRequestDTO);
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/rooms/{roomId}")
     @ResponseStatus(HttpStatus.OK)
     public RoomResponseDTO updateRoom(@PathVariable Long roomId, @RequestBody @Valid RoomRequestDTO roomRequestDTO) {
         return roomService.updateRoom(roomId, roomRequestDTO);
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/rooms/{roomId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteRoom(@PathVariable Long roomId){
