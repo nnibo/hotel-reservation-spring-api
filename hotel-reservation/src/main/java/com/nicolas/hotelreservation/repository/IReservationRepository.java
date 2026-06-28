@@ -1,5 +1,6 @@
 package com.nicolas.hotelreservation.repository;
 
+import com.nicolas.hotelreservation.dto.response.ReservationResponseDTO;
 import com.nicolas.hotelreservation.entity.ReservationEntity;
 import com.nicolas.hotelreservation.enums.ReservationStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -25,4 +26,8 @@ public interface IReservationRepository extends JpaRepository<ReservationEntity,
             @Param("checkInDate") LocalDateTime checkInDate,
             @Param("checkOutDate") LocalDateTime checkOutDate
     );
+
+    List<ReservationEntity> findAllByUserEmail(String email);
+
+    List<ReservationEntity> findByStatus(ReservationStatus status);
 }

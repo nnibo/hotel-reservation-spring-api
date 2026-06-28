@@ -28,9 +28,9 @@ public class ReservationService {
     private final IUserRepository userRepository;
     private final ReservationMapper reservationMapper;
 
-    public void createReservation(ReservationRequestDTO reservationRequestDTO) {
+    public void createReservation(ReservationRequestDTO reservationRequestDTO, String email) {
         RoomEntity room = roomRepository.findById(reservationRequestDTO.roomId()).orElseThrow(() -> new NotFoundException("Quarto não encontrado"));
-        UserEntity user = userRepository.findById(reservationRequestDTO.userId()).orElseThrow(() -> new NotFoundException("Usuario não encontrado"));
+        UserEntity user = userRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("Usuário não encontrado"));
 
         long totalDays = reservationRequestDTO.checkInDate().toLocalDate()
                 .until(reservationRequestDTO.checkOutDate().toLocalDate(), ChronoUnit.DAYS);
@@ -58,12 +58,24 @@ public class ReservationService {
         reservationRepository.save(reservationEntity);
     }
 
-
-    public List<ReservationResponseDTO> getAllReservations() {
-        return reservationRepository.findAll()
+    public List<ReservationResponseDTO> getAllUserReservations(String email) {
+        return reservationRepository.findAllByUserEmail(email)
                 .stream()
                 .map(reservationMapper::entityToDto)
                 .toList();
+    }
+
+
+    public List<ReservationResponseDTO> getAllReservations(ReservationStatus status) {
+        List<ReservationEntity> reservations;
+
+        if(status != null) {
+            reservations = reservationRepository.findByStatus(status);
+        } else {
+            reservations = reservationRepository.findAll();
+        }
+
+        return reservations.stream().map(reservationMapper::entityToDto).toList();
     }
 
     public ReservationResponseDTO getReservationById(Long id) {
@@ -81,17 +93,5 @@ public class ReservationService {
 
         reservationEntity.setStatus(ReservationStatus.CANCELLED);
         reservationRepository.save(reservationEntity);
-    }
-
-    public List<ReservationResponseDTO> getReservationsByStatus(ReservationStatus status) {
-        List<ReservationEntity> filteredReservations = reservationRepository.findAllByStatus(status);
-
-        if(filteredReservations.isEmpty()) {
-            throw new NotFoundException("Não existem reservas com o status: " + status);
-        }
-
-        return filteredReservations.stream()
-                .map(reservationMapper::entityToDto)
-                .toList();
     }
 }
