@@ -7,8 +7,6 @@ import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 public record ReservationRequestDTO(
-    @NotNull(message = "O id do usuário é obrigatório")
-    Long userId,
     @NotNull(message = "O id do quarto é obrigatório")
     Long roomId,
 

@@ -1,5 +1,6 @@
 package com.nicolas.hotelreservation.mapper;
 
+import com.nicolas.hotelreservation.dto.request.RegisterRequestDTO;
 import com.nicolas.hotelreservation.dto.request.UserRequestDTO;
 import com.nicolas.hotelreservation.dto.response.UserResponseDTO;
 import com.nicolas.hotelreservation.entity.UserEntity;
@@ -17,11 +18,12 @@ public class UserMapper {
         );
     }
 
-    public UserEntity dtoToEntity(UserRequestDTO userRequestDTO) {
+    public UserEntity dtoToEntity(RegisterRequestDTO registerRequestDTO) {
         return UserEntity.builder()
-                .name(userRequestDTO.name())
-                .email(userRequestDTO.email())
-                .phoneNumber(userRequestDTO.phoneNumber())
+                .name(registerRequestDTO.name())
+                .email(registerRequestDTO.email())
+                .phoneNumber(registerRequestDTO.phoneNumber())
+                .password(registerRequestDTO.password())
                 .build();
     }
 
@@ -29,5 +31,6 @@ public class UserMapper {
         userEntity.setName(userRequestDTO.name());
         userEntity.setEmail(userRequestDTO.email());
         userEntity.setPhoneNumber(userRequestDTO.phoneNumber());
+
     }
 }
