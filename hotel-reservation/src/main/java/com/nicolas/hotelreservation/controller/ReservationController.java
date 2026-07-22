@@ -45,7 +45,7 @@ public class ReservationController {
         return reservationService.getReservationById(id);
     }
 
-    @PreAuthorize("@reservationSecurity.isOwner(#id, authenticaton) or hasRole('ADMIN')")
+    @PreAuthorize("@reservationSecurity.isOwner(#id, authentication) or hasRole('ADMIN')")
     @PatchMapping("/{id}/cancel")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void cancelReservation(@PathVariable Long id) {
